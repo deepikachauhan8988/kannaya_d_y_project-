@@ -1,85 +1,85 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
-  <title>Update profile</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>Welcome Page</title>
 </head>
+
 <body>
-<?php
-$localhost = "localhost";
-$root = "root";
-$password = "";
-$db = "k_d_y";
-$con = mysqli_connect($localhost, $root, $password, $db);
 
-if (!$con) {
-    die("Connection failed: " . mysqli_connect_error());
-}
+    <?php
+    $localhost = "localhost";
+    $root = "root";
+    $password = "";
+    $db = "k_d_y";
+    $con = mysqli_connect($localhost, $root, $password, $db);
 
-if(isset($_POST['submit'])) {
-    $name = $_POST['firstname'];
-    $email = $_POST['email'];
-    $mobile = $_POST['phoneN'];
-    $passwrd = md5($_POST['password']);
-    
-    $sql = "INSERT INTO update_table (name, email, mobile, passwrd) VALUES ('$name', '$email', '$mobile', '$passwrd')";
-    $result = mysqli_query($con, $sql);
-
-    if($result) {
-        echo "<script>alert('Data inserted successfully')</script>";
-    } else {
-        echo "Error: " . $sql . "<br>" . mysqli_error($con);
+    if ($con->connect_error) {
+        die("Connection failed: " . $con->connect_error);
     }
-}
-?>
-<div class="container">
-  <h2>Welcome Page</h2>
-  <!-- Trigger the modal with a button -->
-  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Update Profile</button>
+    ?>
 
-  <!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Update Profile</h4>
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Update User Details</h5>
+                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                </div>
+                <div class="modal-body">
+                    <form action="" method="POST">
+                        <div class="mb-3">
+                            <label for="user-name" class="col-form-label">Name:<span style="color: red;">*</span></label>
+                            <input type="text" name="user-name" class="form-control" id="user-name" placeholder="Enter Your Name" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="pass-text" class="col-form-label">Password:<span style="color: red;">*</span></label>
+                            <input class="form-control" name="user-password" type="text" id="pass-text" placeholder="Password" required></input>
+                        </div>
+                        <div class="modal-footer">
+                            <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+                            <button type="submit" name="update-form" class="btn btn-primary">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="modal-body">
-          <form action="" method="POST">
-            <div class="form-group">
-              <label for="fname">Name</label>
-              <input type="text" class="form-control" id="fname" name="firstname" placeholder="Your name.." required>
-            </div>
-            <div class="form-group">
-              <label for="lname">Email ID</label>
-              <input type="email" class="form-control" id="lname" name="email" placeholder="Your email.." required>
-            </div>
-            <div class="form-group">
-              <label for="phone">Phone</label>
-              <input type="text" class="form-control" id="phone" name="phoneN" placeholder="Your phone number.." required>
-            </div>
-            <div class="form-group">
-              <label for="password">Update Password</label>
-              <input type="password" class="form-control" id="password" name="password" placeholder="Your password.." required>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal" name="close">Close</button>
-              <button type="submit" class="btn btn-primary" name="submit">Submit</button>
-            </div>
-          </form>
-        </div>
-      </div>
-      
     </div>
-  </div>
-  
-</div>
+
+    <?php
+    if (isset($_POST['update-form'])) {
+        $emp_name = $_POST['user-name'];
+        $password = $_POST['user-password'];
+
+        $sql = "UPDATE district_t SET password='$password',status='unverified' WHERE emp_name = '$emp_name'";
+        if (mysqli_query($con, $sql)) {
+            echo "<script>alert('Password Updated successfully');</script>";
+            // echo "<script>window.location.href='Login.php';</script>";
+        } else {
+            echo "<script>alert('Error updating password');</script>";
+        }
+    }
+
+    $con->close();
+    ?>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var myModal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
+            myModal.show();
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
+
 </html>
